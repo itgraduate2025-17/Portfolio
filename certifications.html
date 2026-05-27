@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Learning — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* =========================================
+   CSS VARIABLES & RESET
+   ========================================= */
+:root {
+  --bg-primary: #080808;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --accent: #e90707;
+  --accent-dim: rgba(255, 0, 79, 0.15);
+  --accent-glow: rgba(255, 0, 79, 0.35);
+  --text-primary: #f0ece4;
+  --text-secondary: #8a8580;
+  --text-muted: #4a4540;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255, 0, 79, 0.4);
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+  --radius: 4px;
+  --transition: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Grain texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* =========================================
+   HERO
+   ========================================= */
+.hero {
+  position: relative;
+  min-height: 36vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,0,79,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-inner { position: relative; z-index: 1; }
+
+.hero-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.8s var(--transition) 0.2s forwards;
+}
+
+.hero-heading {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5.5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin-bottom: 0;
+  opacity: 0;
+  transform: translateY(32px);
+  animation: fadeUp 0.9s var(--transition) 0.5s forwards;
+}
+
+.hero-heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   MAIN WRAPPER
+   ========================================= */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+/* =========================================
+   FILTER BAR
+   ========================================= */
+.filter-section {
+  margin-bottom: 2.5rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  padding: 10px 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s var(--transition);
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* =========================================
+   GRID
+   ========================================= */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+}
+
+/* =========================================
+   CERT CARD
+   ========================================= */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.4s var(--transition), border-color 0.4s var(--transition), transform 0.4s var(--transition), box-shadow 0.4s var(--transition);
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.card.visible {
+  animation: cardReveal 0.7s var(--transition) forwards;
+}
+
+@keyframes cardReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 0, 79, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255, 0, 79, 0.06);
+}
+
+/* Red sweep top border */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 0; height: 2px;
+  background: var(--accent);
+  transition: width 0.5s var(--transition);
+  z-index: 3;
+}
+.card:hover::before { width: 100%; }
+
+/* Image area */
+.card-img-wrap {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  background: #0d0d0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.85) saturate(1.05);
+  transition: filter 0.6s var(--transition), transform 0.6s var(--transition);
+  display: block;
+}
+
+.card:hover .card-img {
+  filter: brightness(1) saturate(1.15);
+  transform: scale(1.04);
+}
+
+/* Placeholder when no image */
+.card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--text-muted);
+}
+
+.card-img-placeholder svg {
+  opacity: 0.3;
+}
+
+.card-img-placeholder span {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+
+/* Category tag */
+.card-cat {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(255, 0, 79, 0.14);
+  border: 1px solid rgba(255, 0, 79, 0.3);
+  padding: 4px 10px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+/* Card body */
+.card-body {
+  padding: 18px 20px 14px;
+  text-align: center;
+}
+
+.card-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 6px;
+  color: var(--text-primary);
+  transition: color 0.3s;
+}
+.card:hover .card-title { color: #fff; }
+
+.card-org {
+  font-size: 0.78rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* =========================================
+   LIGHTBOX
+   ========================================= */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--transition);
+}
+.lightbox.open { opacity: 1; pointer-events: all; }
+
+.lightbox-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(4,4,4,0.95);
+  backdrop-filter: blur(24px);
+}
+
+.lightbox-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 860px;
+}
+
+.lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: 6px;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.lightbox-img.switching { opacity: 0; transform: scale(0.96); }
+
+.lightbox-meta { text-align: center; }
+
+.lightbox-title {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.lightbox-org {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.lightbox-counter {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-top: 4px;
+}
+
+.lb-arrow {
+  position: fixed;
+  top: 50%; transform: translateY(-50%);
+  background: rgba(20,20,20,0.8);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 2;
+  transition: all 0.3s;
+  backdrop-filter: blur(8px);
+}
+.lb-arrow:hover { border-color: var(--accent); color: var(--accent); }
+.lb-arrow.disabled { opacity: 0.2; pointer-events: none; }
+.lb-prev { left: 24px; }
+.lb-next { right: 24px; }
+
+.lb-close {
+  position: fixed;
+  top: 24px; right: 24px;
+  background: rgba(20,20,20,0.8);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 2;
+  transition: all 0.3s;
+  backdrop-filter: blur(8px);
+}
+.lb-close:hover { border-color: var(--accent); color: var(--accent); }
+
+/* =========================================
+   BACK BUTTON
+   ========================================= */
+.back-section {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0 2rem;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s var(--transition), border-color 0.4s;
+}
+.back-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--accent);
+  transform: translateX(-101%);
+  transition: transform 0.4s var(--transition);
+}
+.back-btn:hover { color: #fff; border-color: var(--accent); }
+.back-btn:hover::before { transform: translateX(0); }
+.back-btn svg, .back-btn span { position: relative; z-index: 1; }
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 640px) {
+  .certs-grid { grid-template-columns: 1fr; }
+  .lb-prev { left: 8px; }
+  .lb-next { right: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Learning &amp; Growth</p>
+    <h1 class="hero-heading">Certi<em>fi</em>cations</h1>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Filter -->
+  <div class="filter-section">
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="internship">Internships</button>
+      <button class="filter-btn" data-filter="course">Courses</button>
+      <button class="filter-btn" data-filter="workshop">Workshops </button>
+      <button class="filter-btn" data-filter="webinar">Webinars</button>
+      <button class="filter-btn" data-filter="lor">LOR</button>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="certs-grid" id="certsGrid"></div>
+
+</main>
+
+<!-- Back button -->
+<div class="back-section">
+  <a href="index.html#hero" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 12H5M12 5l-7 7 7 7"/></svg>
+    <span>Back to Portfolio</span>
+  </a>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lightbox-bg" id="lbBg"></div>
+  <div class="lightbox-inner">
+    <img class="lightbox-img" id="lbImg" src="" alt="" />
+    <div class="lightbox-meta">
+      <div class="lightbox-title" id="lbTitle"></div>
+      <div class="lightbox-org" id="lbOrg"></div>
+      <div class="lightbox-counter" id="lbCounter"></div>
+    </div>
+  </div>
+  <button class="lb-arrow lb-prev" id="lbPrev" aria-label="Previous">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="lb-arrow lb-next" id="lbNext" aria-label="Next">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <button class="lb-close" id="lbClose" aria-label="Close">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+</div>
+
+<script>
+/* ==============================================
+   CERTIFICATION DATA
+   — Set your image paths in the img field below
+   ============================================== */
+const certs = [
+  {
+    id: 1,
+    title: "Generative AI Application Developer Certificate",
+    org: "UETIANS Lahore Endowment Foundation, USA (ULEF)",
+    category: "course",
+    categoryLabel: "Course",
+    img: "certifications/Gen AI.jpg"
+  },
+  {
+    id: 2,
+    title: "Basics Of Python",
+    org: "UniAthena",
+    category: "course",
+    categoryLabel: "Course",
+    img: "certifications/Basics of python.jpeg"
+  },
+  {
+    id: 3,
+    title: "Artificial Intelligence",
+    org: "CodeAlpha",
+    category: "internship",
+    categoryLabel: "Internship",
+    img: "certifications/Internship__AI.jpg"
+  },
+  {
+    id: 4,
+    title: "Basics Of Artificial Intelligence",
+    org: "UniAthena",
+    category: "course",
+    categoryLabel: "Course",
+    img: "certifications/Basics of AI.png"
+  },
+  {
+    id: 5,
+    title: "Basics Of Machine Learning",
+    org: "Uniatherna",
+    category: "course",
+    categoryLabel: "Course",
+    img: "certifications/Basics in ML.png"
+  },
+  {
+    id: 6,
+    title: "Machine Learning",
+    org: "CodeAlpha",
+    category: "internship",
+    categoryLabel: "Internship",
+    img: "certifications/Internship_ML.jpg"
+  },
+  {
+    id: 7,
+    title: "Averonex conference 2025 - AI, Research & Future Leardership",
+    org: "AveronX",
+    category: "webinar",
+    categoryLabel: "Webinar",
+    img: "certifications/Averonex conference 2025 - AI, Research & Future Leardership.jpg"
+  },
+  {
+    id: 8,
+    title: "Web Development",
+    org: "Hightech",
+    category: "internship",
+    categoryLabel: "internship",
+    img: "certifications/hightech.jpeg"
+  },
+  {
+    id: 9,
+    title: "Data Science / AI",
+    org: "CoreTech",
+    category: "internship",
+    categoryLabel: "internship",
+    img: "certifications/Data Science AI.jpeg"
+  },
+  {
+    id: 10,
+    title: " 3 Days RAG Workshop",
+    org: "Organized  by Department of IT, QUEST",
+    category: "workshop",
+    categoryLabel: "Workshop",
+      img: "certifications/RAG_certificate1.jpg"
+  },
+  {
+    id: 11,
+    title: "Machine learning",
+    org: "Codealpha",
+    category: "lor",
+    categoryLabel: "LOR",
+      img: "certifications/LOR_ML.jpg"
+  },
+{
+  id: 12,
+  title: "Artificail intelligence",
+  org: "CodeAlpha",
+  category: "lor",
+  categoryLabel: "LOR",
+  img: "certifications/LOR_AI.jpg"
+}
+];
+
+/* ==============================================
+   STATE
+   ============================================== */
+let activeFilter = 'all';
+let lbIndex = 0;
+let lbVisible = [];
+
+/* ==============================================
+   RENDER CARDS
+   ============================================== */
+function renderCards() {
+  const grid = document.getElementById('certsGrid');
+  grid.innerHTML = '';
+
+  const filtered = certs.filter(c => activeFilter === 'all' || c.category === activeFilter);
+  lbVisible = filtered;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--text-muted);font-size:0.9rem;letter-spacing:0.1em;">No certifications found.</div>`;
+    return;
+  }
+
+  filtered.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${i * 60}ms`;
+    card.dataset.id = c.id;
+
+    const imgContent = c.img
+      ? `<img class="card-img" src="${c.img}" alt="${c.title}" loading="lazy" />`
+      : `<div class="card-img-placeholder">
+           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+             <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h6"/>
+           </svg>
+           <span>Certificate Image</span>
+         </div>`;
+
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        ${imgContent}
+        <span class="card-cat">${c.categoryLabel}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${c.title}</div>
+        <div class="card-org">${c.org}</div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => openLightbox(i));
+    grid.appendChild(card);
+
+    requestAnimationFrame(() => card.classList.add('visible'));
+  });
+}
+
+/* ==============================================
+   FILTER LOGIC
+   ============================================== */
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  renderCards();
+});
+
+/* ==============================================
+   LIGHTBOX
+   ============================================== */
+function openLightbox(idx) {
+  lbIndex = idx;
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function updateLightbox() {
+  const c = lbVisible[lbIndex];
+  const img = document.getElementById('lbImg');
+  img.classList.add('switching');
+  setTimeout(() => {
+    img.src = c.img || '';
+    img.alt = c.title;
+    img.style.display = c.img ? 'block' : 'none';
+    document.getElementById('lbTitle').textContent = c.title;
+    document.getElementById('lbOrg').textContent = c.org;
+    document.getElementById('lbCounter').textContent = `${lbIndex + 1} / ${lbVisible.length}`;
+    document.getElementById('lbPrev').classList.toggle('disabled', lbIndex === 0);
+    document.getElementById('lbNext').classList.toggle('disabled', lbIndex === lbVisible.length - 1);
+    img.classList.remove('switching');
+  }, 160);
+}
+
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbBg').addEventListener('click', closeLightbox);
+document.getElementById('lbPrev').addEventListener('click', () => { if (lbIndex > 0) { lbIndex--; updateLightbox(); } });
+document.getElementById('lbNext').addEventListener('click', () => { if (lbIndex < lbVisible.length - 1) { lbIndex++; updateLightbox(); } });
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft' && lbIndex > 0) { lbIndex--; updateLightbox(); }
+  if (e.key === 'ArrowRight' && lbIndex < lbVisible.length - 1) { lbIndex++; updateLightbox(); }
+});
+
+/* ==============================================
+   INIT
+   ============================================== */
+renderCards();
+</script>
+</body>
+</html>
